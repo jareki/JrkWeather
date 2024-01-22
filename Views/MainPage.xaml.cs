@@ -1,4 +1,4 @@
-﻿namespace JrkWeather
+﻿namespace JrkWeather.Views
 {
     public partial class MainPage : ContentPage
     {
