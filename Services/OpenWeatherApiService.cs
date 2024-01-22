@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using JrkWeather.Constants;
 using JrkWeather.Models;
 using JrkWeather.Models.OpenWeatherMap.IN;
 using JrkWeather.Models.OpenWeatherMap.OUT;
@@ -35,7 +37,7 @@ namespace JrkWeather.Services
 
         #region Private Methods
 
-        private async Task<TResponseModel?> ExecuteAsync<TRequestModel,TResponseModel>(
+        private async Task<IOwmResponseModel?> ExecuteAsync<TRequestModel,TResponseModel>(
             string endpoint, 
             TRequestModel requestModel, 
             CancellationToken ct = default) 
@@ -52,15 +54,24 @@ namespace JrkWeather.Services
             var content = JsonSerializer.Serialize(requestModel);
             message.Content = new StringContent(content, Encoding.UTF8);
 
-            var response = await this._httpClient.Value.SendAsync(message, ct);
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var result = JsonSerializer.Deserialize<TResponseModel>(await response.Content.ReadAsStringAsync(ct));
-                return result;
+                var response = await this._httpClient.Value.SendAsync(message, ct);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result =
+                        JsonSerializer.Deserialize<TResponseModel>(await response.Content.ReadAsStringAsync(ct));
+                    return result;
+                }
+                else
+                {
+                    return this.HandleRequestErrors(response.StatusCode);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return (TResponseModel)this.HandleRequestErrors(response.StatusCode);
+                Debug.WriteLine(ex);
+                return new ErrorResponseModel(ex.Message);
             }
         }
 
@@ -98,7 +109,7 @@ namespace JrkWeather.Services
 
         #region Public Methods
 
-        public async Task GetWeatherForecastData(CancellationToken ct = default)
+        public async Task<IOwmResponseModel> GetWeatherForecastDataAsync(CancellationToken ct = default)
         {
             var requestModel = new WeatherRequestModel()
             {
@@ -107,7 +118,19 @@ namespace JrkWeather.Services
                 UnitSystem = _settingsService.UnitSystem
             };
 
-            var result = this.ExecuteAsync<WeatherRequestModel, WeatherResponseModel>("data/3.0/onecall", requestModel, ct);
+            return await this.ExecuteAsync<WeatherRequestModel, WeatherResponseModel>("data/3.0/onecall", requestModel, ct);
+        }
+
+        public async Task<IOwmResponseModel> GetLocationDataAsync(CancellationToken ct = default)
+        {
+            var requestModel = new GeoLocationRequestModel()
+            {
+                ApiKey = _settingsService.ApiKey,
+                Position = _settingsService.LastLocation,
+                Limit = DefaultConstants.LocationsCount
+            };
+
+            return await this.ExecuteAsync<GeoLocationRequestModel, GeoLocationResponseModel>("geo/1.0/reverse", requestModel, ct);
         }
 
         #endregion

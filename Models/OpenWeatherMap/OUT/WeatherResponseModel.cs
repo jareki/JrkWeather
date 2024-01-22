@@ -2,62 +2,97 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace JrkWeather.Models.OpenWeatherMap.OUT
 {
     public class WeatherResponseModel : IOwmResponseModel
     {
-        public double lat { get; set; }
-        public double lon { get; set; }
-        public Current current { get; set; }
-        public Hourly[] hourly { get; set; }
-        public Daily[] daily { get; set; }
-    }
-    
+        [JsonPropertyName("lat")]
+        public double Latitude { get; set; }
 
-    public class Current
-    {
-        public int dt { get; set; }
-        public double temp { get; set; }
-        public int pressure { get; set; }
-        public int humidity { get; set; }
-        public double wind_speed { get; set; }
-        public int wind_deg { get; set; }
-        public double wind_gust { get; set; }
-        public Weather[] weather { get; set; }
-    }
+        [JsonPropertyName("lon")]
+        public double Longitude { get; set; }
 
-    public class Weather
-    {
-        public int id { get; set; }
-        public string main { get; set; }
-        public string description { get; set; }
-    }
+        [JsonPropertyName("current")]
+        public Current CurrentWeather { get; set; }
 
-    public class Hourly
-    {
-        public int dt { get; set; }
-        public double temp { get; set; }
-        public Weather[] weather { get; set; }
-    }
-    
-    public class Daily
-    {
-        public int dt { get; set; }
-        public TempDailySummary temp { get; set; }
-        public Weather[] weather { get; set; }
-    }
+        [JsonPropertyName("hourly")]
+        public Hourly[] HourlyForecast { get; set; }
 
-    public class TempDailySummary
-    {
-        public float day { get; set; }
-        public float min { get; set; }
-        public float max { get; set; }
-        public float night { get; set; }
-        public float eve { get; set; }
-        public float morn { get; set; }
-    }
-    
+        [JsonPropertyName("daily")]
+        public Daily[] DailyForecast { get; set; }
+        public class Current
+        {
+            [JsonPropertyName("dt")]
+            public int Timestamp { get; set; }
 
+            [JsonPropertyName("temp")]
+            public double Temp { get; set; }
+
+            [JsonPropertyName("pressure")]
+            public int Pressure { get; set; }
+
+            [JsonPropertyName("humidity")]
+            public int Humidity { get; set; }
+
+            [JsonPropertyName("wind_speed")]
+            public double WindSpeed { get; set; }
+
+            [JsonPropertyName("wind_deg")]
+            public int WindDirection { get; set; }
+
+            [JsonPropertyName("wind_gust")]
+            public double WindGust { get; set; }
+
+            [JsonPropertyName("weather")]
+            public Weather[] Weather { get; set; }
+        }
+
+        public class Weather
+        {
+            [JsonPropertyName("id")]
+            public int Id { get; set; }
+
+            [JsonPropertyName("main")]
+            public string Main { get; set; }
+
+            [JsonPropertyName("description")]
+            public string Description { get; set; }
+        }
+
+        public class Hourly
+        {
+            [JsonPropertyName("dt")]
+            public int Timestamp { get; set; }
+
+            [JsonPropertyName("temp")]
+            public TempDailySummary Temp { get; set; }
+
+            [JsonPropertyName("weather")]
+            public Weather[] Weather { get; set; }
+        }
+
+        public class Daily
+        {
+            [JsonPropertyName("dt")]
+            public int Timestamp { get; set; }
+
+            [JsonPropertyName("temp")]
+            public TempDailySummary Temp { get; set; }
+
+            [JsonPropertyName("weather")]
+            public Weather[] Weather { get; set; }
+        }
+
+        public class TempDailySummary
+        {
+            [JsonPropertyName("min")]
+            public float Min { get; set; }
+
+            [JsonPropertyName("max")]
+            public float Max { get; set; }
+        }
+    }
 }

@@ -2,6 +2,7 @@
 using JrkWeather.Constants;
 using JrkWeather.Enums;
 using JrkWeather.Models;
+using Location = JrkWeather.Models.Location;
 
 namespace JrkWeather.Services
 {
@@ -56,12 +57,12 @@ namespace JrkWeather.Services
         /// <summary>
         /// saved location from weatherservice to making api requests
         /// </summary>
-        public Place? CurrentPlace
+        public Location? CurrentPlace
         {
             get
             {
                 string val = Preferences.Get(nameof(CurrentPlace), string.Empty);
-                return JsonSerializer.Deserialize<Place>(val);
+                return JsonSerializer.Deserialize<Location>(val);
             }
             set
             {

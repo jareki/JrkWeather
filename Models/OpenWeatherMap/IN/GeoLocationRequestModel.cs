@@ -7,7 +7,7 @@ using JrkWeather.Enums;
 
 namespace JrkWeather.Models.OpenWeatherMap.IN
 {
-    public class GeoPlaceRequestModel : IOwmRequestModel
+    public class GeoLocationRequestModel : IOwmRequestModel
     {
         #region Fields
 
