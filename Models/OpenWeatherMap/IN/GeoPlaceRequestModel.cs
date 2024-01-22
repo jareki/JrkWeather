@@ -7,7 +7,7 @@ using JrkWeather.Enums;
 
 namespace JrkWeather.Models.OpenWeatherMap.IN
 {
-    public class WeatherRequestModel: IOwmRequestModel
+    public class GeoPlaceRequestModel : IOwmRequestModel
     {
         #region Fields
 
@@ -15,13 +15,13 @@ namespace JrkWeather.Models.OpenWeatherMap.IN
 
         public string ApiKey { get; set; }
 
-        public UnitSystem UnitSystem { get; set; }
+        public int Limit { get; set; }
 
         #endregion
 
         public string CreateGetParamUriString()
         {
-            return $"lat={Position.Latitude},lon={Position.Longitude},units={UnitSystem.ToOwmString()},ApiKey={ApiKey}";
+            return $"lat={Position.Latitude},lon={Position.Longitude},limit={Limit},appid={ApiKey}";
         }
     }
 }
