@@ -75,7 +75,7 @@ namespace JrkWeather.Services
             }
         }
 
-        private IOwmResponseModel HandleRequestErrors(HttpStatusCode code)
+        private ErrorResponseModel HandleRequestErrors(HttpStatusCode code)
         {
             if (code == HttpStatusCode.BadRequest)
             {
@@ -109,8 +109,13 @@ namespace JrkWeather.Services
 
         #region Public Methods
 
-        public async Task<IOwmResponseModel> GetWeatherForecastDataAsync(CancellationToken ct = default)
+        public async Task<IOwmResponseModel?> GetWeatherForecastDataAsync(CancellationToken ct = default)
         {
+            if (_settingsService.CurrentPlace == null)
+            {
+                return null;
+            }
+
             var requestModel = new WeatherRequestModel()
             {
                 ApiKey = _settingsService.ApiKey,
@@ -121,7 +126,7 @@ namespace JrkWeather.Services
             return await this.ExecuteAsync<WeatherRequestModel, WeatherResponseModel>("data/3.0/onecall", requestModel, ct);
         }
 
-        public async Task<IOwmResponseModel> GetLocationDataAsync(CancellationToken ct = default)
+        public async Task<IOwmResponseModel?> GetLocationDataAsync(CancellationToken ct = default)
         {
             var requestModel = new GeoLocationRequestModel()
             {
