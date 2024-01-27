@@ -12,13 +12,13 @@ namespace JrkWeather.Services
 
         public string ApiKey
         {
-            get => Preferences.Get(nameof(ApiKey), SecretsConstants.DefaultAPIKey);
+            get => Preferences.Get(nameof(ApiKey), SecretsConstants.DefaultApiKey);
             set => Preferences.Set(nameof(ApiKey), value);
         }
 
         public string ApiEndPoint
         {
-            get => Preferences.Get(nameof(ApiEndPoint), SecretsConstants.DefaultWeatherAPIEndPoint);
+            get => Preferences.Get(nameof(ApiEndPoint), SecretsConstants.DefaultWeatherApiEndPoint);
             set => Preferences.Set(nameof(ApiEndPoint), value);
         }
         

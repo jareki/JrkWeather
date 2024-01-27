@@ -8,7 +8,7 @@ namespace JrkWeather.Services
     {
         #region Fields
 
-        private string _dbPath => Path.Combine(FileSystem.AppDataDirectory, DefaultConstants.DbName);
+        private static string DbPath => Path.Combine(FileSystem.AppDataDirectory, DefaultConstants.DbName);
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace JrkWeather.Services
 
         public ResponseData? GetStoredData(Guid locationId)
         {
-            using (var db = new LiteDatabase(_dbPath))
+            using (var db = new LiteDatabase(DbPath))
             {
                 var dataCollection = db.GetCollection<ResponseData>();
                 return GetStoredDataCore(dataCollection, locationId);
@@ -36,7 +36,7 @@ namespace JrkWeather.Services
 
         public void StoreData(Guid locationId, string response)
         {
-            using (var db = new LiteDatabase(_dbPath))
+            using (var db = new LiteDatabase(DbPath))
             {
                 var dataCollection = db.GetCollection<ResponseData>();
                 var data = GetStoredDataCore(dataCollection, locationId);

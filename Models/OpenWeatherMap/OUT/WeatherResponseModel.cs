@@ -68,7 +68,7 @@ namespace JrkWeather.Models.OpenWeatherMap.OUT
             public int Timestamp { get; set; }
 
             [JsonPropertyName("temp")]
-            public TempDailySummary Temp { get; set; }
+            public double Temp { get; set; }
 
             [JsonPropertyName("weather")]
             public Weather[] Weather { get; set; }
